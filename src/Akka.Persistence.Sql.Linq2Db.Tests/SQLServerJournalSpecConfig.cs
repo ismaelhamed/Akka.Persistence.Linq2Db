@@ -13,12 +13,12 @@ namespace Akka.Persistence.Sql.Linq2Db.Tests
                         class = ""{0}""
                         plugin-dispatcher = ""akka.actor.default-dispatcher""
                         connection-string = ""{1}""
-#connection-string = ""FullUri=file:test.db&cache=shared""
+                        #connection-string = ""FullUri=file:test.db&cache=shared""
                         provider-name = """ + LinqToDB.ProviderName.SqlServer + @"""
                         tables.journal {{ 
                            auto-init = true
                            table-name = ""{2}"" 
-                           }}
+                        }}
                     }}
                 }}
             }}

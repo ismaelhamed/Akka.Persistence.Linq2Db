@@ -7,8 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Akka.Persistence.TCK" Version="1.4.9" />
-        <PackageReference Include="Akka.Persistence.TestKit" Version="1.4.9" />
+        <PackageReference Include="Akka.Persistence.TCK" Version="1.4.10" />
+        <PackageReference Include="Akka.Persistence.TestKit" Version="1.4.10" />
+        <PackageReference Include="Docker.DotNet" Version="3.125.4" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="3.1.6" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
         <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
