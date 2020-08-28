@@ -4,7 +4,7 @@ namespace Akka.Persistence.Sql.Linq2Db.Tests
 {
     public static class SQLServerJournalSpecConfig
     {
-        public static string _journalBaseConfig = @"
+        public static string JournalBaseConfig = @"
             akka.persistence {{
                 publish-plugin-commands = on
                 journal {{
@@ -23,12 +23,8 @@ namespace Akka.Persistence.Sql.Linq2Db.Tests
                 }}
             }}
         ";
-        public static Config Create(string connString, string tableName)
-        {
-            return ConfigurationFactory.ParseString(
-                string.Format(_journalBaseConfig,
-                    typeof(Linq2DbWriteJournal).AssemblyQualifiedName,
-                    connString,tableName));
-        }
+        
+        public static Config Create(string connString, string tableName) => 
+            ConfigurationFactory.ParseString(string.Format(JournalBaseConfig, typeof(Linq2DbAsyncWriteJournal).AssemblyQualifiedName, connString,tableName));
     }
 }

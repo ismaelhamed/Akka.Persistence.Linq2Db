@@ -25,7 +25,7 @@ namespace Akka.Persistence.Sql.Linq2Db.Tests
         {
             return ConfigurationFactory.ParseString(
                 string.Format(_journalBaseConfig,
-                    typeof(Linq2DbWriteJournal).AssemblyQualifiedName,
+                    typeof(Linq2DbAsyncWriteJournal).AssemblyQualifiedName,
                     connString));
         }
     }

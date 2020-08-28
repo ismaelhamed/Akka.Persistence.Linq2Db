@@ -4,16 +4,9 @@ using Akka.Util;
 
 namespace Akka.Persistence.Sql.Linq2Db
 {
-    public abstract class
-        FlowPersistentReprSerializer<T> : PersistentReprSerializer<T>
+    public abstract class FlowPersistentReprSerializer<T> : PersistentReprSerializer<T>
     {
-        public
-            Flow<T, Try<(IPersistentRepresentation, IImmutableSet<string>, long)>
-                , NotUsed> deserializeFlow()
-        {
-            return Flow.Create<T, NotUsed>().Select(t => deserialize(t));
-            //.Select(t => );
-
-        }
+        public Flow<T, Try<(IPersistentRepresentation, IImmutableSet<string>, long)>, NotUsed> DeserializeFlow() => 
+            Flow.Create<T, NotUsed>().Select(Deserialize);
     }
 }

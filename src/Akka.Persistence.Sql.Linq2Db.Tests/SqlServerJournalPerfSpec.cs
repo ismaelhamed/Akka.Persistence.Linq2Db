@@ -20,7 +20,7 @@ namespace Akka.Persistence.Sql.Linq2Db.Tests
                     journal {{
                         plugin = ""akka.persistence.journal.linq2db""
                         linq2db {{
-                            class = ""{typeof(Linq2DbWriteJournal).AssemblyQualifiedName}""
+                            class = ""{typeof(Linq2DbAsyncWriteJournal).AssemblyQualifiedName}""
                             plugin-dispatcher = ""akka.actor.default-dispatcher""
                             provider-name = SqlServer
                             connection-string = ""{DbUtils.ConnectionString}""

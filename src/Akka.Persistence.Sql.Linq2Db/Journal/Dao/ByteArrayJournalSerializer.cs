@@ -10,9 +10,9 @@ namespace Akka.Persistence.Sql.Linq2Db
 {
     public class ByteArrayJournalSerializer : FlowPersistentReprSerializer<JournalRow>
     {
-        private Akka.Serialization.Serialization _serializer;
-        private string _separator;
-        private JournalConfig _journalConfig;
+        private readonly Akka.Serialization.Serialization _serializer;
+        private readonly string _separator;
+        private readonly JournalConfig _journalConfig;
 
         public ByteArrayJournalSerializer(JournalConfig journalConfig, Akka.Serialization.Serialization serializer, string separator)
         {
@@ -48,16 +48,16 @@ namespace Akka.Persistence.Sql.Linq2Db
                 });
                 return new JournalRow()
                 {
-                    manifest = manifest,
-                    message = binary,
-                    persistenceId = persistentRepr.PersistenceId,
-                    tags = tTags.Any()?  tTags.Aggregate((tl, tr) => tl + _separator + tr) : "",
-                    Identifier = serializer.Identifier, sequenceNumber = persistentRepr.SequenceNr
+                    Manifest = manifest,
+                    Message = binary,
+                    PersistenceId = persistentRepr.PersistenceId,
+                    Tags = tTags.Any()?  tTags.Aggregate((tl, tr) => tl + _separator + tr) : "",
+                    Identifier = serializer.Identifier, SequenceNumber = persistentRepr.SequenceNr
                 };
             });
         }
 
-        protected override Try<(IPersistentRepresentation, IImmutableSet<string>, long)> deserialize(JournalRow t)
+        protected override Try<(IPersistentRepresentation, IImmutableSet<string>, long)> Deserialize(JournalRow t)
         {
             return Try<(IPersistentRepresentation, IImmutableSet<string>, long)>.From(
                 () =>
@@ -65,31 +65,31 @@ namespace Akka.Persistence.Sql.Linq2Db
                     object deserialized = null;
                     if (t.Identifier.HasValue == false)
                     {
-                        var type = System.Type.GetType(t.manifest, true);
+                        var type = System.Type.GetType(t.Manifest, true);
                         var deserializer =
                             _serializer.FindSerializerForType(type, null);
                         // TODO: hack. Replace when https://github.com/akkadotnet/akka.net/issues/3811
                         deserialized =
                             Akka.Serialization.Serialization.WithTransport(
                                 _serializer.System,
-                                () => deserializer.FromBinary(t.message, type));
+                                () => deserializer.FromBinary(t.Message, type));
                     }
                     else
                     {
                         var serializerId = t.Identifier.Value;
                         // TODO: hack. Replace when https://github.com/akkadotnet/akka.net/issues/3811
-                        deserialized = _serializer.Deserialize(t.message,
-                            serializerId, t.manifest);
+                        deserialized = _serializer.Deserialize(t.Message,
+                            serializerId, t.Manifest);
                     }
 
                     return (
-                        new Persistent(deserialized, t.sequenceNumber,
-                            t.persistenceId,
-                            t.manifest, t.deleted, ActorRefs.NoSender, null),
-                        t.tags.Split(new[] {_separator},
+                        new Persistent(deserialized, t.SequenceNumber,
+                            t.PersistenceId,
+                            t.Manifest, t.Deleted, ActorRefs.NoSender, null),
+                        t.Tags.Split(new[] {_separator},
                                 StringSplitOptions.RemoveEmptyEntries)
                             .ToImmutableHashSet(),
-                        t.ordering);
+                        t.Ordering);
                 }
             );
         }

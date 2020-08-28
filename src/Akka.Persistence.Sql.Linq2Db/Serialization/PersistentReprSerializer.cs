@@ -8,38 +8,26 @@ namespace Akka.Persistence.Sql.Linq2Db
 {
     public abstract class PersistentReprSerializer<T>
     {
-        public IEnumerable<Try<IEnumerable<T>>> Serialize(
-            IEnumerable<AtomicWrite> messages)
+        public IEnumerable<Try<IEnumerable<T>>> Serialize(IEnumerable<AtomicWrite> messages)
         {
             return messages.Select(aw =>
             {
-                var serialized =
-                    (aw.Payload as IEnumerable<IPersistentRepresentation>)
-                    .Select(Serialize);
+                var serialized = (aw.Payload as IEnumerable<IPersistentRepresentation>)!.Select(Serialize);
                 return TrySeq.Sequence(serialized);
             });
         }
-
-
+        
         public Try<T> Serialize(IPersistentRepresentation persistentRepr)
         {
-            switch (persistentRepr.Payload)
+            return persistentRepr.Payload switch
             {
-                case Tagged t:
-                    return Serialize(persistentRepr.WithPayload(t.Payload), t.Tags);
-                default:
-                    return Serialize(persistentRepr,
-                        ImmutableHashSet<string>.Empty);
-            }
+                Tagged t => Serialize(persistentRepr.WithPayload(t.Payload), t.Tags),
+                _ => Serialize(persistentRepr, ImmutableHashSet<string>.Empty)
+            };
         }
 
-        protected abstract Try<T> Serialize(
-            IPersistentRepresentation persistentRepr,
-            IImmutableSet<string> tTags);
+        protected abstract Try<T> Serialize(IPersistentRepresentation persistentRepr, IImmutableSet<string> tTags);
 
-        protected abstract
-            Try<(IPersistentRepresentation, IImmutableSet<string>, long)>
-            deserialize(
-                T t);
+        protected abstract Try<(IPersistentRepresentation, IImmutableSet<string>, long)> Deserialize(T t);
     }
 }
