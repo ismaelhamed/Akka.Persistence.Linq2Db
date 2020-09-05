@@ -26,7 +26,7 @@ namespace Akka.Persistence.Sql.Linq2Db.Tests
                             connection-string = ""{DbUtils.ConnectionString}""
                             tables.journal {{ 
                                auto-init = true
-                               table-name = EventJournal
+                               table-name = ""EventJournal""
                             }}                            
                         }}
                     }}
